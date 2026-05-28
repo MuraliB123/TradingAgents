@@ -1,0 +1,10 @@
+**Recommendation**: Underweight
+
+**Rationale**: Both sides agree SPY’s primary trend is still up, but the bull case leans heavily on momentum/“tape strength” while conceding it’s not a bargain. The bear case is more decisive on risk/reward: at ~28.3x P/E with ~1% yield, upside likely relies on continued multiple support and flawless mega-cap execution, while downside can materialize quickly via de-rating (rates/inflation), narrow-leadership fatigue, or headline-driven geopolitical shocks. With breadth/concentration risk unresolved and valuation leaving little margin for error near highs, the stronger argument is to stay invested but trim and wait for either a better entry (pullback) or confirmation via broadening participation.
+
+**Strategic Actions**: 1) Target exposure: move SPY to modestly below benchmark (e.g., trim 25–40% of the current SPY allocation or reduce to ~0.75–0.9x your normal core weight).
+2) Execution: scale out in 2–3 tranches over 3–10 trading days (sell strength into rallies) to avoid single-point timing risk.
+3) Re-add plan (buy the dip, not the top): place staggered re-entry levels around the debate’s support zones: first tranche near 742–745, second near 733–739; only add a final tranche if price stabilizes (higher low) or breadth improves.
+4) Risk controls: if SPY breaks and holds below ~733 on a weekly basis, pause re-adding and keep reduced exposure; reassess for a deeper drawdown scenario.
+5) Hedge overlay (optional, if you must maintain core exposure): buy 1–3 month protective puts or run a collar on a portion of the remaining position; size hedge to protect against a 5–10% drawdown while keeping some upside.
+6) Upside participation rule: if SPY breaks out to new highs with improving breadth (more sectors/equals-weight outperforming) and volatility stays contained, gradually move back toward neutral (benchmark) weight.

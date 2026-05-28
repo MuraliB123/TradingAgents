@@ -1,0 +1,13 @@
+**Recommendation**: Underweight
+
+**Rationale**: KAYNES.NS clearly isn’t a broken operating business: FY26 revenue (+33% YoY), gross profit (+53%), and EBITDA (+41%) plus multi‑year margin expansion are strong bull points, and leverage looks manageable (net debt/EBITDA ~1.0x, current ratio ~2.2). However, the bear case is more persuasive for *today’s entry/positioning* because shareholder value creation is not yet showing up in cash: operating cash flow is -₹6.0bn and FCF -₹18.4bn, the OCF trend has worsened from FY24→FY26, working capital is large (receivables ~₹15.3bn, inventory ~₹11.0bn), and dilution has begun. With the stock still on premium multiples (≈59x TTM, ≈35x forward) and the chart technically damaged (below 50/200 DMA after a high‑volume breakdown), there is insufficient margin of safety to add aggressively. Net: respect the growth story, but stay cautious until cash conversion and price trend improve—hence Underweight.
+
+**Strategic Actions**: 1) Positioning now: keep KAYNES.NS underweight (e.g., 0.5x normal/benchmark weight). If already full-sized, trim 30–50% to reduce exposure to further multiple compression.
+2) Risk controls: use ₹2,995–₹3,000 as the key structural support zone. If a decisive breakdown/weekly close <₹2,950 occurs, exit the remainder (thesis shifts from ‘reset’ to ‘downtrend continuation’).
+3) Re-add triggers (must see at least 2 of 3):
+   a) Cash: trailing 2 quarters of positive operating cash flow and evidence of working-capital normalization (receivables/inventory growth slower than revenue; improving cash conversion).
+   b) Technical: reclaim and hold above the 50-DMA (~₹3,806) for 2–3 weeks with improving volume/RS, and ideally a subsequent reclaim of the 200-DMA (~₹4,874).
+   c) Fundamentals: gross margin stabilizes back toward the ~34–35% run-rate (latest quarter ~31.7% is a watch item) without incremental dilution.
+4) If triggers hit: rebuild in tranches (25% of intended position on 50-DMA reclaim, +25% on first positive OCF print with WC improvement, +50% on 200-DMA reclaim / FCF trend toward breakeven).
+5) Monitoring checklist each quarter: OCF/EBITDA conversion, receivable days/inventory turns, capex intensity vs revenue growth, financing needs/dilution, and margin trajectory (watch for sustained <32% GM as a yellow flag).
+6) Time horizon: treat as a ‘watch-and-upsize-on-proof’ name; avoid averaging down mechanically in the current trend.
