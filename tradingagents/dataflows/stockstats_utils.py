@@ -1,6 +1,5 @@
 import time
 import logging
-import json
 
 import pandas as pd
 import yfinance as yf
@@ -12,23 +11,6 @@ from .config import get_config
 from .utils import safe_ticker_component
 
 logger = logging.getLogger(__name__)
-
-
-def _debug_log(run_id: str, hypothesis_id: str, location: str, message: str, data: dict) -> None:
-    payload = {
-        "sessionId": "b58a13",
-        "runId": run_id,
-        "hypothesisId": hypothesis_id,
-        "location": location,
-        "message": message,
-        "data": data,
-        "timestamp": int(time.time() * 1000),
-    }
-    try:
-        with open("debug-b58a13.log", "a", encoding="utf-8") as f:
-            f.write(json.dumps(payload, default=str) + "\n")
-    except Exception:
-        pass
 
 
 def yf_retry(func, max_retries=3, base_delay=2.0):
@@ -52,43 +34,12 @@ def yf_retry(func, max_retries=3, base_delay=2.0):
 
 def _clean_dataframe(data: pd.DataFrame) -> pd.DataFrame:
     """Normalize a stock DataFrame for stockstats: parse dates, drop invalid rows, fill price gaps."""
-    # region agent log
-    _debug_log(
-        run_id="pre-fix",
-        hypothesis_id="H1",
-        location="stockstats_utils.py:_clean_dataframe:entry",
-        message="clean_dataframe input snapshot",
-        data={
-            "columns": list(data.columns),
-            "shape": [int(data.shape[0]), int(data.shape[1])],
-            "has_Date": "Date" in data.columns,
-        },
-    )
-    # endregion
     if "Date" not in data.columns:
         candidate_date_cols = ["index", "Datetime", "datetime", "date"]
         found_col = next((c for c in candidate_date_cols if c in data.columns), None)
         if found_col is not None:
             data = data.rename(columns={found_col: "Date"})
-            # region agent log
-            _debug_log(
-                run_id="post-fix",
-                hypothesis_id="H1",
-                location="stockstats_utils.py:_clean_dataframe:rename_date",
-                message="renamed non-standard date column to Date",
-                data={"from_column": found_col, "columns_after": list(data.columns)},
-            )
-            # endregion
         else:
-            # region agent log
-            _debug_log(
-                run_id="post-fix",
-                hypothesis_id="H1",
-                location="stockstats_utils.py:_clean_dataframe:missing_date",
-                message="unable to infer Date column",
-                data={"columns": list(data.columns)},
-            )
-            # endregion
             raise KeyError("Date")
 
     data["Date"] = pd.to_datetime(data["Date"], errors="coerce")
@@ -98,20 +49,6 @@ def _clean_dataframe(data: pd.DataFrame) -> pd.DataFrame:
     data[price_cols] = data[price_cols].apply(pd.to_numeric, errors="coerce")
     data = data.dropna(subset=["Close"])
     data[price_cols] = data[price_cols].ffill().bfill()
-
-    # region agent log
-    _debug_log(
-        run_id="pre-fix",
-        hypothesis_id="H3",
-        location="stockstats_utils.py:_clean_dataframe:exit",
-        message="clean_dataframe output snapshot",
-        data={
-            "columns": list(data.columns),
-            "shape": [int(data.shape[0]), int(data.shape[1])],
-            "null_counts": {c: int(data[c].isna().sum()) for c in ["Date", "Close"] if c in data.columns},
-        },
-    )
-    # endregion
 
     return data
 
@@ -146,15 +83,6 @@ def load_ohlcv(symbol: str, curr_date: str) -> pd.DataFrame:
         try:
             data = pd.read_csv(data_file, on_bad_lines="skip", encoding="utf-8")
         except pd.errors.EmptyDataError:
-            # region agent log
-            _debug_log(
-                run_id="post-fix",
-                hypothesis_id="H5",
-                location="stockstats_utils.py:load_ohlcv:cache_empty",
-                message="cache file was empty; redownloading",
-                data={"file": data_file},
-            )
-            # endregion
             data = yf_retry(lambda: yf.download(
                 symbol,
                 start=start_str,
@@ -169,19 +97,6 @@ def load_ohlcv(symbol: str, curr_date: str) -> pd.DataFrame:
             tmp_file = f"{data_file}.tmp"
             data.to_csv(tmp_file, index=False, encoding="utf-8")
             os.replace(tmp_file, data_file)
-        # region agent log
-        _debug_log(
-            run_id="pre-fix",
-            hypothesis_id="H1",
-            location="stockstats_utils.py:load_ohlcv:cache_read",
-            message="loaded cached OHLCV CSV",
-            data={
-                "file": data_file,
-                "columns": list(data.columns),
-                "shape": [int(data.shape[0]), int(data.shape[1])],
-            },
-        )
-        # endregion
     else:
         data = yf_retry(lambda: yf.download(
             symbol,
@@ -194,27 +109,6 @@ def load_ohlcv(symbol: str, curr_date: str) -> pd.DataFrame:
         data = data.reset_index()
         if "Date" not in data.columns and "index" in data.columns:
             data = data.rename(columns={"index": "Date"})
-            # region agent log
-            _debug_log(
-                run_id="post-fix",
-                hypothesis_id="H2",
-                location="stockstats_utils.py:load_ohlcv:normalize_download_date",
-                message="normalized downloaded index column to Date",
-                data={"columns": list(data.columns)},
-            )
-            # endregion
-        # region agent log
-        _debug_log(
-            run_id="pre-fix",
-            hypothesis_id="H2",
-            location="stockstats_utils.py:load_ohlcv:download",
-            message="downloaded OHLCV and reset index",
-            data={
-                "columns": list(data.columns),
-                "shape": [int(data.shape[0]), int(data.shape[1])],
-            },
-        )
-        # endregion
         tmp_file = f"{data_file}.tmp"
         data.to_csv(tmp_file, index=False, encoding="utf-8")
         os.replace(tmp_file, data_file)
@@ -223,20 +117,6 @@ def load_ohlcv(symbol: str, curr_date: str) -> pd.DataFrame:
 
     # Filter to curr_date to prevent look-ahead bias in backtesting
     data = data[data["Date"] <= curr_date_dt]
-
-    # region agent log
-    _debug_log(
-        run_id="pre-fix",
-        hypothesis_id="H3",
-        location="stockstats_utils.py:load_ohlcv:post_filter",
-        message="post-filter OHLCV snapshot",
-        data={
-            "columns": list(data.columns),
-            "shape": [int(data.shape[0]), int(data.shape[1])],
-            "has_Date": "Date" in data.columns,
-        },
-    )
-    # endregion
 
     return data
 
@@ -268,19 +148,6 @@ class StockstatsUtils:
     ):
         data = load_ohlcv(symbol, curr_date)
         df = wrap(data)
-        # region agent log
-        _debug_log(
-            run_id="pre-fix",
-            hypothesis_id="H4",
-            location="stockstats_utils.py:get_stock_stats:after_wrap",
-            message="stockstats wrapped dataframe snapshot",
-            data={
-                "columns": list(df.columns),
-                "shape": [int(df.shape[0]), int(df.shape[1])],
-                "has_Date": "Date" in df.columns,
-            },
-        )
-        # endregion
         df["Date"] = df["Date"].dt.strftime("%Y-%m-%d")
         curr_date_str = pd.to_datetime(curr_date).strftime("%Y-%m-%d")
 

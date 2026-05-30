@@ -24,6 +24,8 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from xml.etree import ElementTree
 
+from tradingagents.dataflows.tool_response_logging import log_tool_response
+
 logger = logging.getLogger(__name__)
 
 _JSON_API = "https://www.reddit.com/r/{sub}/search.json?{qs}"
@@ -227,9 +229,18 @@ def fetch_reddit_posts(
             )
         blocks.append("\n".join(lines))
 
+    log_metadata = {
+        "subreddits": list(subreddits),
+        "limit_per_sub": limit_per_sub,
+        "total_posts": total_posts,
+    }
     if total_posts == 0:
-        return (
+        result = (
             f"<no Reddit posts found mentioning {mention_label} across "
             f"{', '.join(f'r/{s}' for s in subreddits)} in the past 7 days>"
         )
-    return "\n\n".join(blocks)
+        log_tool_response("reddit", result, ticker=ticker, metadata=log_metadata)
+        return result
+    result = "\n\n".join(blocks)
+    log_tool_response("reddit", result, ticker=ticker, metadata=log_metadata)
+    return result

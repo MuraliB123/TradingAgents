@@ -19,6 +19,8 @@ import logging
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
+from tradingagents.dataflows.tool_response_logging import log_tool_response
+
 logger = logging.getLogger(__name__)
 
 _API = "https://api.stocktwits.com/api/2/streams/symbol/{ticker}.json"
@@ -50,6 +52,11 @@ def fetch_stocktwits_messages(
     caller never has to special-case None or exceptions.
     """
     stocktwits_symbol = normalize_stocktwits_symbol(ticker, market=market)
+    log_metadata = {
+        "market": market,
+        "limit": limit,
+        "lookup_symbol": stocktwits_symbol,
+    }
     url = _API.format(ticker=stocktwits_symbol)
     req = Request(url, headers={"User-Agent": _UA, "Accept": "application/json"})
     try:
@@ -62,11 +69,15 @@ def fetch_stocktwits_messages(
             stocktwits_symbol,
             exc,
         )
-        return f"<stocktwits unavailable: {type(exc).__name__}>"
+        result = f"<stocktwits unavailable: {type(exc).__name__}>"
+        log_tool_response("stocktwits", result, ticker=ticker, metadata=log_metadata)
+        return result
 
     messages = data.get("messages", []) if isinstance(data, dict) else []
     if not messages:
-        return f"<no StockTwits messages found for ${stocktwits_symbol}>"
+        result = f"<no StockTwits messages found for ${stocktwits_symbol}>"
+        log_tool_response("stocktwits", result, ticker=ticker, metadata=log_metadata)
+        return result
 
     lines = []
     bullish = bearish = unlabeled = 0
@@ -100,4 +111,11 @@ def fetch_stocktwits_messages(
         f"Unlabeled: {unlabeled} · "
         f"Total: {total} most-recent messages"
     )
-    return summary + "\n\n" + "\n".join(lines)
+    result = summary + "\n\n" + "\n".join(lines)
+    log_tool_response(
+        "stocktwits",
+        result,
+        ticker=ticker,
+        metadata={**log_metadata, "message_count": total},
+    )
+    return result

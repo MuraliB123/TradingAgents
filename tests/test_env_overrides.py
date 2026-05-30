@@ -26,6 +26,7 @@ def test_no_env_uses_built_in_defaults(monkeypatch):
     assert dc.DEFAULT_CONFIG["backend_url"] is None
     assert dc.DEFAULT_CONFIG["max_debate_rounds"] == 1
     assert dc.DEFAULT_CONFIG["checkpoint_enabled"] is False
+    assert dc.DEFAULT_CONFIG["tool_response_logging_enabled"] is True
     assert dc.DEFAULT_CONFIG["reddit_market"] == "us"
     assert dc.DEFAULT_CONFIG["stocktwits_market"] == "us"
 
@@ -40,6 +41,7 @@ def test_string_overrides(monkeypatch):
         TRADINGAGENTS_OUTPUT_LANGUAGE="Chinese",
         TRADINGAGENTS_REDDIT_MARKET="india",
         TRADINGAGENTS_STOCKTWIST_MARKET="india",
+        TRADINGAGENTS_TOOL_RESPONSE_LOGGING_ENABLED="false",
     )
     assert dc.DEFAULT_CONFIG["llm_provider"] == "google"
     assert dc.DEFAULT_CONFIG["deep_think_llm"] == "gemini-3-pro-preview"
@@ -48,6 +50,7 @@ def test_string_overrides(monkeypatch):
     assert dc.DEFAULT_CONFIG["output_language"] == "Chinese"
     assert dc.DEFAULT_CONFIG["reddit_market"] == "india"
     assert dc.DEFAULT_CONFIG["stocktwits_market"] == "india"
+    assert dc.DEFAULT_CONFIG["tool_response_logging_enabled"] is False
 
 
 def test_stocktwits_market_plural_env_alias(monkeypatch):

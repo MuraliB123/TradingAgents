@@ -20,6 +20,7 @@ _ENV_OVERRIDES = {
     "TRADINGAGENTS_REDDIT_MARKET":         "reddit_market",
     "TRADINGAGENTS_STOCKTWIST_MARKET":     "stocktwits_market",
     "TRADINGAGENTS_STOCKTWITS_MARKET":     "stocktwits_market",
+    "TRADINGAGENTS_TOOL_RESPONSE_LOGGING_ENABLED": "tool_response_logging_enabled",
 }
 
 
@@ -48,6 +49,12 @@ DEFAULT_CONFIG = _apply_env_overrides({
     "project_dir": os.path.abspath(os.path.join(os.path.dirname(__file__), ".")),
     "results_dir": os.getenv("TRADINGAGENTS_RESULTS_DIR", os.path.join(_TRADINGAGENTS_HOME, "logs")),
     "data_cache_dir": os.getenv("TRADINGAGENTS_CACHE_DIR", os.path.join(_TRADINGAGENTS_HOME, "cache")),
+    # Per-run directory for full tool response logs (StockTwits, Reddit,
+    # yfinance news, technical indicators). None disables this logging; the
+    # CLI sets it per run to a tool_responses/ subdir under results_dir.
+    "tool_response_log_dir": None,
+    # Master switch for per-run tool-response logging.
+    "tool_response_logging_enabled": True,
     "memory_log_path": os.getenv("TRADINGAGENTS_MEMORY_LOG_PATH", os.path.join(_TRADINGAGENTS_HOME, "memory", "trading_memory.md")),
     # Optional cap on the number of resolved memory log entries. When set,
     # the oldest resolved entries are pruned once this limit is exceeded.

@@ -1002,6 +1002,15 @@ def run_analysis(checkpoint: bool = False, reddit_market: Optional[str] = None):
     if reddit_market is not None:
         config["reddit_market"] = _normalize_reddit_market(reddit_market)
 
+    # Per-run directory where dataflow fetchers append full tool responses.
+    # Set before the graph is constructed so set_config() picks it up.
+    config["tool_response_log_dir"] = str(
+        Path(config["results_dir"])
+        / selections["ticker"]
+        / selections["analysis_date"]
+        / "tool_responses"
+    )
+
     # Create stats callback handler for tracking LLM/tool calls
     stats_handler = StatsCallbackHandler()
 

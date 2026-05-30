@@ -8,6 +8,7 @@ from dateutil.relativedelta import relativedelta
 
 from .config import get_config
 from .stockstats_utils import yf_retry
+from .tool_response_logging import log_tool_response
 
 
 def _extract_article_data(article: dict) -> dict:
@@ -68,12 +69,21 @@ def get_news_yfinance(
         Formatted string containing news articles
     """
     article_limit = get_config()["news_article_limit"]
+    log_metadata = {
+        "start_date": start_date,
+        "end_date": end_date,
+        "article_limit": article_limit,
+    }
     try:
         stock = yf.Ticker(ticker)
         news = yf_retry(lambda: stock.get_news(count=article_limit))
 
         if not news:
-            return f"No news found for {ticker}"
+            result = f"No news found for {ticker}"
+            log_tool_response(
+                "yfinance_news", result, ticker=ticker, metadata=log_metadata
+            )
+            return result
 
         # Parse date range for filtering
         start_dt = datetime.strptime(start_date, "%Y-%m-%d")
@@ -100,12 +110,25 @@ def get_news_yfinance(
             filtered_count += 1
 
         if filtered_count == 0:
-            return f"No news found for {ticker} between {start_date} and {end_date}"
+            result = f"No news found for {ticker} between {start_date} and {end_date}"
+            log_tool_response(
+                "yfinance_news", result, ticker=ticker, metadata=log_metadata
+            )
+            return result
 
-        return f"## {ticker} News, from {start_date} to {end_date}:\n\n{news_str}"
+        result = f"## {ticker} News, from {start_date} to {end_date}:\n\n{news_str}"
+        log_tool_response(
+            "yfinance_news",
+            result,
+            ticker=ticker,
+            metadata={**log_metadata, "article_count": filtered_count},
+        )
+        return result
 
     except Exception as e:
-        return f"Error fetching news for {ticker}: {str(e)}"
+        result = f"Error fetching news for {ticker}: {str(e)}"
+        log_tool_response("yfinance_news", result, ticker=ticker, metadata=log_metadata)
+        return result
 
 
 def get_global_news_yfinance(
@@ -132,6 +155,12 @@ def get_global_news_yfinance(
     if limit is None:
         limit = config["global_news_article_limit"]
     search_queries = config["global_news_queries"]
+
+    log_metadata = {
+        "curr_date": curr_date,
+        "look_back_days": look_back_days,
+        "limit": limit,
+    }
 
     all_news = []
     seen_titles = set()
@@ -162,7 +191,11 @@ def get_global_news_yfinance(
                 break
 
         if not all_news:
-            return f"No global news found for {curr_date}"
+            result = f"No global news found for {curr_date}"
+            log_tool_response(
+                "yfinance_global_news", result, metadata=log_metadata
+            )
+            return result
 
         # Calculate date range
         curr_dt = datetime.strptime(curr_date, "%Y-%m-%d")
@@ -196,7 +229,15 @@ def get_global_news_yfinance(
                 news_str += f"Link: {link}\n"
             news_str += "\n"
 
-        return f"## Global Market News, from {start_date} to {curr_date}:\n\n{news_str}"
+        result = f"## Global Market News, from {start_date} to {curr_date}:\n\n{news_str}"
+        log_tool_response(
+            "yfinance_global_news",
+            result,
+            metadata={**log_metadata, "article_count": len(all_news[:limit])},
+        )
+        return result
 
     except Exception as e:
-        return f"Error fetching global news: {str(e)}"
+        result = f"Error fetching global news: {str(e)}"
+        log_tool_response("yfinance_global_news", result, metadata=log_metadata)
+        return result
