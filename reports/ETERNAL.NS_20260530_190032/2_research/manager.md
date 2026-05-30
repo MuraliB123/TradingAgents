@@ -1,0 +1,13 @@
+**Recommendation**: Underweight
+
+**Rationale**: Debate net: the bull has a credible *directional* signal (latest quarter operating income swung from -0.71B to +0.18B alongside rising revenue/EBITDA) plus FY2026 OCF is positive and liquidity looks comfortable (current ratio ~2.77), which supports survivability and a potential early-stage operating leverage story. However, the bear case is stronger for positioning *today*: profitability remains extremely thin on a trailing basis (TTM operating margin ~0.10%), FY2026 operating income is still negative (-3.89B), and free cash flow is meaningfully negative (TTM ~-28.7B; FY2026 -11.19B) driven by capex and working-capital drag—meaning the equity is still not self-funding at the pace implied by valuation. With valuation already pricing a rebound (TTM P/E ~626; forward P/E ~61.7) and no near-term company-specific catalyst in the window, execution/timing risk is asymmetric: any delay in sustained operating profitability or cash conversion can trigger multiple compression. Technicals add near-term downside risk while price is testing the 247–250 shelf; a break likely opens 239–242 and potentially 228–234. Therefore the prudent stance is to trim/avoid adding until confirmation (sustained profitability/cash conversion and/or a reclaim of 256.5–259.5).
+
+**Strategic Actions**: 1) Positioning: run ETERNAL.NS at an Underweight (e.g., 0–50% of a normal core size). If currently overweight, trim into strength toward 256.5–259.5.
+2) New risk add only on confirmation:
+   - Breakout add: initiate/ add a tranche only on a daily close back above 259.5 (or 256.5 with strong follow-through), then add on successful retest.
+   - Value/risk add: if 247 breaks, do not average down; wait for 239–242 to hold and show a reversal pattern before considering a small tactical long.
+3) Risk controls:
+   - If holding any long, use a hard stop/hedge trigger on sustained closes <247 (next downside 239–242).
+   - Take partial profits into 256.5–259.5 until the company shows repeat operating profitability.
+4) Fundamental confirmation checklist before moving to Hold/Overweight: two consecutive quarters of positive operating income (or clear TTM improvement), and a visible improvement in FCF trajectory (narrowing burn via easing working-capital drag and/or capex intensity).
+5) Optional hedging (if derivatives available): pair a small tactical long with a protective put (strike near 247) or collar into resistance to cap downside while keeping upside exposure.

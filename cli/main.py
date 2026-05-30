@@ -28,6 +28,7 @@ from tradingagents.graph.analyst_execution import (
     sync_analyst_tracker_from_chunk,
 )
 from tradingagents.default_config import DEFAULT_CONFIG
+from tradingagents.dataflows.reddit import get_subreddits_for_market
 from cli.models import AnalystType
 from cli.utils import *
 from cli.announcements import fetch_announcements, display_announcements
@@ -974,7 +975,13 @@ def format_tool_args(args, max_length=80) -> str:
         return result[:max_length - 3] + "..."
     return result
 
-def run_analysis(checkpoint: bool = False):
+def _normalize_reddit_market(market: str) -> str:
+    normalized = market.strip().lower()
+    get_subreddits_for_market(normalized)
+    return normalized
+
+
+def run_analysis(checkpoint: bool = False, reddit_market: Optional[str] = None):
     # First get all user selections
     selections = get_user_selections()
 
@@ -992,6 +999,8 @@ def run_analysis(checkpoint: bool = False):
     config["anthropic_effort"] = selections.get("anthropic_effort")
     config["output_language"] = selections.get("output_language", "English")
     config["checkpoint_enabled"] = checkpoint
+    if reddit_market is not None:
+        config["reddit_market"] = _normalize_reddit_market(reddit_market)
 
     # Create stats callback handler for tracking LLM/tool calls
     stats_handler = StatsCallbackHandler()
@@ -1084,6 +1093,10 @@ def run_analysis(checkpoint: bool = False):
             "System",
             f"Selected analysts: {', '.join(analyst.value for analyst in selections['analysts'])}",
         )
+        if "social" in selected_analyst_keys:
+            message_buffer.add_message(
+                "System", f"Reddit market mode: {config.get('reddit_market', 'us')}"
+            )
         update_display(layout, stats_handler=stats_handler, start_time=start_time)
 
         # Update agent status to in_progress for the first analyst
@@ -1275,12 +1288,17 @@ def analyze(
         "--clear-checkpoints",
         help="Delete all saved checkpoints before running (force fresh start).",
     ),
+    reddit_market: Optional[str] = typer.Option(
+        None,
+        "--market",
+        help="Reddit sentiment market mode: us or india. Defaults to config/env.",
+    ),
 ):
     if clear_checkpoints:
         from tradingagents.graph.checkpointer import clear_all_checkpoints
         n = clear_all_checkpoints(DEFAULT_CONFIG["data_cache_dir"])
         console.print(f"[yellow]Cleared {n} checkpoint(s).[/yellow]")
-    run_analysis(checkpoint=checkpoint)
+    run_analysis(checkpoint=checkpoint, reddit_market=reddit_market)
 
 
 if __name__ == "__main__":

@@ -17,6 +17,9 @@ _ENV_OVERRIDES = {
     "TRADINGAGENTS_MAX_RISK_ROUNDS":      "max_risk_discuss_rounds",
     "TRADINGAGENTS_CHECKPOINT_ENABLED":   "checkpoint_enabled",
     "TRADINGAGENTS_BENCHMARK_TICKER":     "benchmark_ticker",
+    "TRADINGAGENTS_REDDIT_MARKET":         "reddit_market",
+    "TRADINGAGENTS_STOCKTWIST_MARKET":     "stocktwits_market",
+    "TRADINGAGENTS_STOCKTWITS_MARKET":     "stocktwits_market",
 }
 
 
@@ -90,6 +93,12 @@ DEFAULT_CONFIG = _apply_env_overrides({
         "ECB Bank of England BOJ central bank policy",
         "oil commodities supply chain energy",
     ],
+    # Reddit market mode for sentiment analysis. "us" preserves the original
+    # subreddit set; "india" targets India-focused stock market communities.
+    "reddit_market": "us",
+    # StockTwits market mode for sentiment analysis. "india" maps Yahoo-style
+    # NSE tickers such as TCS.NS to StockTwits cashtags such as TCS.NSE.
+    "stocktwits_market": "us",
     # Data vendor configuration
     # Category-level configuration (default for all tools in category)
     "data_vendors": {

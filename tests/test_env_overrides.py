@@ -26,6 +26,8 @@ def test_no_env_uses_built_in_defaults(monkeypatch):
     assert dc.DEFAULT_CONFIG["backend_url"] is None
     assert dc.DEFAULT_CONFIG["max_debate_rounds"] == 1
     assert dc.DEFAULT_CONFIG["checkpoint_enabled"] is False
+    assert dc.DEFAULT_CONFIG["reddit_market"] == "us"
+    assert dc.DEFAULT_CONFIG["stocktwits_market"] == "us"
 
 
 def test_string_overrides(monkeypatch):
@@ -36,12 +38,21 @@ def test_string_overrides(monkeypatch):
         TRADINGAGENTS_QUICK_THINK_LLM="gemini-3-flash-preview",
         TRADINGAGENTS_LLM_BACKEND_URL="https://example.invalid/v1",
         TRADINGAGENTS_OUTPUT_LANGUAGE="Chinese",
+        TRADINGAGENTS_REDDIT_MARKET="india",
+        TRADINGAGENTS_STOCKTWIST_MARKET="india",
     )
     assert dc.DEFAULT_CONFIG["llm_provider"] == "google"
     assert dc.DEFAULT_CONFIG["deep_think_llm"] == "gemini-3-pro-preview"
     assert dc.DEFAULT_CONFIG["quick_think_llm"] == "gemini-3-flash-preview"
     assert dc.DEFAULT_CONFIG["backend_url"] == "https://example.invalid/v1"
     assert dc.DEFAULT_CONFIG["output_language"] == "Chinese"
+    assert dc.DEFAULT_CONFIG["reddit_market"] == "india"
+    assert dc.DEFAULT_CONFIG["stocktwits_market"] == "india"
+
+
+def test_stocktwits_market_plural_env_alias(monkeypatch):
+    dc = _reload_with_env(monkeypatch, TRADINGAGENTS_STOCKTWITS_MARKET="india")
+    assert dc.DEFAULT_CONFIG["stocktwits_market"] == "india"
 
 
 def test_int_coercion(monkeypatch):

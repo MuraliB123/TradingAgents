@@ -16,8 +16,6 @@ from __future__ import annotations
 
 import json
 import logging
-from datetime import datetime, timezone
-from typing import Optional
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
@@ -27,7 +25,23 @@ _API = "https://api.stocktwits.com/api/2/streams/symbol/{ticker}.json"
 _UA = "tradingagents/0.2 (+https://github.com/TauricResearch/TradingAgents)"
 
 
-def fetch_stocktwits_messages(ticker: str, limit: int = 30, timeout: float = 10.0) -> str:
+def normalize_stocktwits_symbol(ticker: str, market: str = "us") -> str:
+    """Return the symbol format expected by StockTwits for the configured market."""
+    symbol = ticker.strip().upper().lstrip("$")
+    if market.strip().lower() == "india":
+        if symbol.endswith(".NS"):
+            return symbol[:-3] + ".NSE"
+        if symbol.endswith(".BO"):
+            return symbol[:-3] + ".BSE"
+    return symbol
+
+
+def fetch_stocktwits_messages(
+    ticker: str,
+    limit: int = 30,
+    timeout: float = 10.0,
+    market: str = "us",
+) -> str:
     """Fetch recent StockTwits messages for ``ticker`` and return them as a
     formatted plaintext block ready for prompt injection.
 
@@ -35,18 +49,24 @@ def fetch_stocktwits_messages(ticker: str, limit: int = 30, timeout: float = 10.
     symbol has no messages, or the response shape is unexpected — the
     caller never has to special-case None or exceptions.
     """
-    url = _API.format(ticker=ticker.upper())
+    stocktwits_symbol = normalize_stocktwits_symbol(ticker, market=market)
+    url = _API.format(ticker=stocktwits_symbol)
     req = Request(url, headers={"User-Agent": _UA, "Accept": "application/json"})
     try:
         with urlopen(req, timeout=timeout) as resp:
             data = json.loads(resp.read())
     except (HTTPError, URLError, json.JSONDecodeError, TimeoutError) as exc:
-        logger.warning("StockTwits fetch failed for %s: %s", ticker, exc)
+        logger.warning(
+            "StockTwits fetch failed for %s (lookup symbol %s): %s",
+            ticker,
+            stocktwits_symbol,
+            exc,
+        )
         return f"<stocktwits unavailable: {type(exc).__name__}>"
 
     messages = data.get("messages", []) if isinstance(data, dict) else []
     if not messages:
-        return f"<no StockTwits messages found for ${ticker.upper()}>"
+        return f"<no StockTwits messages found for ${stocktwits_symbol}>"
 
     lines = []
     bullish = bearish = unlabeled = 0

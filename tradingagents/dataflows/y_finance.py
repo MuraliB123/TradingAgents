@@ -4,7 +4,14 @@ from dateutil.relativedelta import relativedelta
 import pandas as pd
 import yfinance as yf
 import os
-from .stockstats_utils import StockstatsUtils, _clean_dataframe, yf_retry, load_ohlcv, filter_financials_by_date
+from .stockstats_utils import (
+    StockstatsUtils,
+    _clean_dataframe,
+    yf_retry,
+    load_ohlcv,
+    filter_financials_by_date,
+    _debug_log,
+)
 
 def get_YFin_data_online(
     symbol: Annotated[str, "ticker symbol of the company"],
@@ -199,6 +206,19 @@ def _get_stock_stats_bulk(
 
     data = load_ohlcv(symbol, curr_date)
     df = wrap(data)
+    # region agent log
+    _debug_log(
+        run_id="pre-fix",
+        hypothesis_id="H4",
+        location="y_finance.py:_get_stock_stats_bulk:after_wrap",
+        message="bulk wrapped dataframe snapshot",
+        data={
+            "columns": list(df.columns),
+            "shape": [int(df.shape[0]), int(df.shape[1])],
+            "has_Date": "Date" in df.columns,
+        },
+    )
+    # endregion
     df["Date"] = df["Date"].dt.strftime("%Y-%m-%d")
     
     # Calculate the indicator for all rows at once
@@ -237,6 +257,21 @@ def get_stockstats_indicator(
             curr_date,
         )
     except Exception as e:
+        # region agent log
+        _debug_log(
+            run_id="pre-fix",
+            hypothesis_id="H5",
+            location="y_finance.py:get_stockstats_indicator:exception",
+            message="indicator retrieval failed",
+            data={
+                "symbol": symbol,
+                "indicator": indicator,
+                "curr_date": curr_date,
+                "error_type": type(e).__name__,
+                "error": str(e),
+            },
+        )
+        # endregion
         print(
             f"Error getting stockstats indicator data for indicator {indicator} on {curr_date}: {e}"
         )

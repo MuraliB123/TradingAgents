@@ -1,0 +1,9 @@
+**Rating**: Underweight
+
+**Executive Summary**: Maintain an Underweight in ETERNAL.NS with no core adds while the stock remains below the 200-SMA (~285.9) and fundamentals show fragile profitability and deeply negative TTM FCF (~-₹28.68B). If already at benchmark weight, trim toward ~0.5x benchmark (or cut 25–50% of an active position); only consider a small tactical sleeve (≤0.25–0.5% NAV) on a daily close/acceptance above ~260.5 with MACD histogram staying positive. Use a hard stop/invalidation on a daily close below ~245 (50-SMA area) and take profits into ~285–286 unless cash-flow/margins improve materially.
+
+**Investment Thesis**: The debate converges on a key point: ETERNAL.NS is showing an early technical repair, but it is still an “attempt” within a fragile fundamental and higher-timeframe downtrend regime. The aggressive analyst cites the momentum inflection (MACD from ~-1.17 on 2026-05-25 to +0.98 on 2026-05-29; histogram ~+0.96; RSI ~52.4) and cooling ATR (~7.2) as evidence a tradable rebound can push toward the upper Bollinger/trigger zone near ~260.5; this supports staying alert for a tactical breakout trade. However, the conservative analyst correctly emphasizes downside asymmetry and whipsaw risk while price remains below the 200-SMA (~285.9) and the business exhibits extremely thin profitability (TTM operating margin ~0.10%, net margin ~0.67%) alongside deeply negative TTM free cash flow (~-₹28.68B) and meaningful leverage/interest sensitivity (debt ~₹45.9B; elevated reported debt-to-equity). The neutral synthesis aligns with the Research Manager: keep the core book underweight because fundamentals and the long-term trend do not yet justify adding risk, but allow a tightly sized, rules-based tactical sleeve only upon acceptance above ~260.5 with momentum confirmation, using ~245 as a strict invalidation to avoid churn and large drawdowns.
+
+**Price Target**: 286.0
+
+**Time Horizon**: 3-6 months
